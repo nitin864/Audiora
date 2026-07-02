@@ -80,7 +80,7 @@ async function loginUser(req,res){
         role: user.role
     }, process.env.JWT_SECRET);
 
-    res.cooie("token", token)
+    res.cookie("token", token)
 
     res.status(201).json({
         message: "user logged In successfully",
