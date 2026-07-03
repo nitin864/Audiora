@@ -57,13 +57,7 @@ async function createAlbum(req, res) {
 async function getAllMusics(req, res) {
     try {
 
-        const token = req.cookies.token;
 
-        if (!token) {
-            return res.status(401).json({
-                message: "unauthorized"
-            })
-        }
 
         const music = await musicModel.find()
             .populate("artist", "username")
@@ -84,5 +78,25 @@ async function getAllMusics(req, res) {
     }
 }
 
+async function getAllAlbums(req, res) {
+    try {
+        const albums = await albumModel.find()
+            .populate("artist", "username")
+            .sort({ createdAt: -1 });
 
-module.exports = { createMusic, createAlbum, getAllMusics }
+        res.status(200).json({
+            success: true,
+            count: albums.length,
+            albums: albums,
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch albums",
+        });
+    }
+}
+
+
+module.exports = { createMusic, createAlbum, getAllMusics, getAllAlbums }
