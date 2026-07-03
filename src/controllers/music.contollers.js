@@ -85,5 +85,27 @@ async function createAlbum(req,res) {
     
 }
 
+async function getAllMusics(req,res){
+    try {
+       
+        const music = await musicModel.find()
+        .populate("artist", "username")
+        .sort({ createdAt: -1 });
+        
+        res.status(200).json({
+            success: true,
+            count: musics.length,
+            musics: music,
+        });
+    } catch (error) {
+        console.log(error)
+
+         res.status(500).json({
+            success: false,
+            message: "Failed to fetch musics",
+        });
+    }
+}
+
 
 module.exports = { createMusic ,createAlbum }
