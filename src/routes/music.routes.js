@@ -3,6 +3,6 @@ const musicControllers = require('../controllers/music.contollers')
 
 const router = express.Router()
 
-router.post('/create', musicControllers.createMusic)
+router.post('/upload', musicControllers.createMusic)
 
 module.exports = router
