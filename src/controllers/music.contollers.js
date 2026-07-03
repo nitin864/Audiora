@@ -1,7 +1,7 @@
 const musicModel = require('../models/music.model')
 const userModel = require('../models/user.model')
 const jwt = require('jsonwebtoken')
-const musicFilesUpload = require('../services/storage.service')
+const {filesUpload} = require('../services/storage.service')
 
 async function createMusic(req, res) {
     try {
@@ -22,21 +22,21 @@ async function createMusic(req, res) {
             })
         }
 
-        const { title, genre, releaseDate } = req.body;
+        const { title, genre } = req.body;
         const file = req.file;
 
-        const result = await musicFilesUpload(file.buffer.toString('base64'));
-
+        const result = await filesUpload(file.buffer.toString('base64'));
+       
         const music = await musicModel.create({
-            uri: result.uri,
+            uri: result.url,
             title,
             artist: decoded.id,
             genre,
-            releaseDate
+            releaseDate: Date.now()
         })
 
         res.status(201).json({
-            message: "new music created successfully",
+            message: "new music uploaded successfully",
             music: music
         })
 
