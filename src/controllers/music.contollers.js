@@ -108,4 +108,4 @@ async function getAllMusics(req,res){
 }
 
 
-module.exports = { createMusic ,createAlbum }
+module.exports = { createMusic ,createAlbum, getAllMusics}
