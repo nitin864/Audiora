@@ -41,7 +41,16 @@ async function authUser(req, res, next) {
     }
     try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+        if (decoded.role !== "user" && decoded.role !== "artist") {
+            return res.status(403).json({
+                message: "You don't have access to this resource"
+            })
+        }
+
         req.user = decoded;
+
+
         next()
     } catch (error) {
         console.log(error)
