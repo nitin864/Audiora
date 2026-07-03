@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const albumModel = new mongoose.model({
+const albumSchema = new mongoose.Schema({
     title : {
         type: String,
         required: true
@@ -19,6 +19,6 @@ const albumModel = new mongoose.model({
     }
 })
 
-const album = await mongoose.model('album', albumModel);
+const albumModel = mongoose.model('album', albumSchema);
 
-module.exports = album
+module.exports = albumModel;
