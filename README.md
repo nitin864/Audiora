@@ -218,9 +218,10 @@ controller source under `src/` for exact request/response shapes.
 ### Installation
 
 ```bash
-git clone <this-repository>
-cd audiora
+git clone https://github.com/nitin864/Audiora
+cd Audiora
 npm install
+npm run dev
 ```
 
 Create a `.env` file in the project root:
