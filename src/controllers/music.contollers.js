@@ -25,6 +25,21 @@ async function createMusic(req, res) {
         const { title, genre, releaseDate } = req.body;
         const file = req.file;
 
+        const result = await musicFilesUpload(file.buffer.toString('base64'));
+
+        const music = await musicModel.create({
+            uri: result.uri,
+            title,
+            artist: decoded.id,
+            genre,
+            releaseDate
+        })
+
+        res.status(201).json({
+            message: "new music created successfully",
+            music: music
+        })
+
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Internal server error" });
