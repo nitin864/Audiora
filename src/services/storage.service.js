@@ -5,14 +5,12 @@ const client = new ImageKit({
   privateKey: process.env.IMAGE_KIT_PRIVATE_KEY,  
 });
 
-async function filesUpload(file){
+async function filesUpload(file, options = {}) {
   const response = await client.files.upload({
     file: file,
-    fileName: 'music_' + Date.now(),
-    folder: "audiora/music"
-
+    fileName: options.fileName || ('file_' + Date.now()),
+    folder: options.folder || "audiora/music"
   })
-
   return response;
 }
 

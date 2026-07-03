@@ -5,12 +5,16 @@ const middleware = require('../middlewares/auth.middleware')
 
 
 const router = express.Router()
-const upload = multer({ storage: multer.memoryStorage() })  
+const upload = multer({ storage: multer.memoryStorage() })
 
 router.get('/', middleware.authUser, musicControllers.getAllMusics)
 router.get('/album', middleware.authUser, musicControllers.getAllAlbums)
 
-router.post('/upload', middleware.authTokenArtistCheck, upload.single('music'), musicControllers.createMusic)
-router.post('/album', middleware.authTokenArtistCheck ,musicControllers.createAlbum)
+router.post('/upload', middleware.authTokenArtistCheck, upload.fields([
+    { name: 'music', maxCount: 1 },
+    { name: 'thumbnail', maxCount: 1 },
+]), musicControllers.createMusic)
+
+router.post('/album', middleware.authTokenArtistCheck, musicControllers.createAlbum)
 
 module.exports = router 

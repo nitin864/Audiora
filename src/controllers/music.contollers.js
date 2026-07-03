@@ -8,17 +8,34 @@ const albumModel = require('../models/album.model')
 
 async function createMusic(req, res) {
     try {
-
         const { title, genre } = req.body;
-        const file = req.file;
+        const musicFile = req.files?.music?.[0];
+        const thumbnailFile = req.files?.thumbnail?.[0];
 
-        const result = await filesUpload(file.buffer.toString('base64'));
+        if (!musicFile) {
+            return res.status(400).json({ message: "music file is required" });
+        }
+
+        const musicResult = await filesUpload(musicFile.buffer.toString('base64'), {
+            fileName: 'music_' + Date.now(),
+            folder: 'audiora/music',
+        });
+
+        let thumbnailUrl;
+        if (thumbnailFile) {
+            const thumbResult = await filesUpload(thumbnailFile.buffer.toString('base64'), {
+                fileName: 'thumb_' + Date.now(),
+                folder: 'audiora/thumbnails',
+            });
+            thumbnailUrl = thumbResult.url;
+        }
 
         const music = await musicModel.create({
-            uri: result.url,
+            uri: musicResult.url,
             title,
             artist: req.user.id,
             genre,
+            thumbnail: thumbnailUrl,
             releaseDate: Date.now()
         })
 
