@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 
 const albumSchema = new mongoose.Schema({
-    title : {
+    title: {
         type: String,
         required: true
     },
@@ -15,7 +15,12 @@ const albumSchema = new mongoose.Schema({
     artist: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "user",
-        required : true
+        required: true
+    },
+
+    thumbnail: {
+        type: String,
+        required: false
     }
 })
 

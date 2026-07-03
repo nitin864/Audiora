@@ -52,12 +52,30 @@ async function createMusic(req, res) {
 
 async function createAlbum(req, res) {
     try {
+        const { title } = req.body;
+        let { musics } = req.body;
 
-        const { title, musics } = req.body;
+        if (!musics) {
+            musics = [];
+        } else if (!Array.isArray(musics)) {
+            musics = [musics];  
+        }
+
+        const thumbnailFile = req.file;
+        let thumbnailUrl;
+        if (thumbnailFile) {
+            const thumbResult = await filesUpload(thumbnailFile.buffer.toString('base64'), {
+                fileName: 'album_thumb_' + Date.now(),
+                folder: 'audiora/thumbnails',
+            });
+            thumbnailUrl = thumbResult.url;
+        }
+
         const album = await albumModel.create({
             title,
-            musics: musics,
-            artist: req.user.id
+            musics,
+            artist: req.user.id,
+            thumbnail: thumbnailUrl,
         })
 
         res.status(201).json({
@@ -67,8 +85,8 @@ async function createAlbum(req, res) {
 
     } catch (error) {
         console.log(error)
+        res.status(500).json({ message: "Internal server error" });
     }
-
 }
 
 async function getAllMusics(req, res) {

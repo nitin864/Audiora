@@ -15,6 +15,6 @@ router.post('/upload', middleware.authTokenArtistCheck, upload.fields([
     { name: 'thumbnail', maxCount: 1 },
 ]), musicControllers.createMusic)
 
-router.post('/album', middleware.authTokenArtistCheck, musicControllers.createAlbum)
+router.post('/album', middleware.authTokenArtistCheck,upload.single('thumbnail'), musicControllers.createAlbum)
 
 module.exports = router 
