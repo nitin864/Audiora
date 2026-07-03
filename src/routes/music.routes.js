@@ -7,7 +7,7 @@ const middleware = require('../middlewares/auth.middleware')
 const router = express.Router()
 const upload = multer({ storage: multer.memoryStorage() })  
 
-router.get('/', musicControllers.getAllMusics)
+router.get('/', middleware.authUser, musicControllers.getAllMusics)
 
 router.post('/upload', middleware.authTokenArtistCheck, upload.single('music'), musicControllers.createMusic)
 router.post('/album', middleware.authTokenArtistCheck ,musicControllers.createAlbum)
