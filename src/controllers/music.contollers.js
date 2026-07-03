@@ -102,7 +102,7 @@ async function getAllMusics(req, res) {
 
         res.status(200).json({
             success: true,
-            count: musics.length,
+            count: music.length,
             musics: music,
         });
     } catch (error) {
