@@ -27,7 +27,8 @@ Audiora exposes a small, role-aware API for a Spotify-style catalog:
 - **Accounts** — register and log in as a `user` (listener) or `artist`,
   authenticated via a JWT stored in an HTTP cookie.
 - **Catalog** — any authenticated account can list every track and album in
-  the system.
+  the system, look up a single track or album by id, or list every track
+  from a given artist.
 - **Publishing** — artist accounts can upload a track (audio file plus an
   optional cover image) and bundle their tracks into albums.
 
@@ -203,9 +204,17 @@ controller source under `src/` for exact request/response shapes.
 | POST   | `/auth/register`     | Public             | Create an account (`role` defaults to `user`)  |
 | POST   | `/auth/login`         | Public             | Log in, sets the `token` cookie                |
 | GET    | `/music`              | Any logged-in user | List every track, artist populated             |
+| GET    | `/music/:id`          | Any logged-in user | Get a single track by id                       |
+| GET    | `/music/artist/:id`   | Any logged-in user | List every track by a given artist             |
 | GET    | `/music/album`        | Any logged-in user | List every album, artist populated             |
+| GET    | `/albums/:id`         | Any logged-in user | Get a single album by id                       |
 | POST   | `/music/upload`       | Artist only        | Upload a track (`music`, optional `thumbnail`) |
 | POST   | `/music/album`        | Artist only        | Create an album (`title`, `musics`, optional `thumbnail`) |
+
+> Note: `/albums/:id` doesn't share the `/music` prefix used by every other
+> catalog route (`/music/album` for the list, `/albums/:id` for a single
+> one). If that's intentional because it's mounted as its own router, ignore
+> this; if not, consider renaming it to `/music/album/:id` for consistency.
 
 ## Getting started
 
@@ -218,10 +227,9 @@ controller source under `src/` for exact request/response shapes.
 ### Installation
 
 ```bash
-git clone https://github.com/nitin864/Audiora
-cd Audiora
+git clone <this-repository>
+cd audiora
 npm install
-npm run dev
 ```
 
 Create a `.env` file in the project root:
@@ -266,6 +274,14 @@ Browse the catalog:
 
 ```bash
 curl http://localhost:3000/api/music -b cookies.txt
+```
+
+Fetch a single track, a given artist's tracks, or a single album:
+
+```bash
+curl http://localhost:3000/api/music/<track-id> -b cookies.txt
+curl http://localhost:3000/api/music/artist/<artist-id> -b cookies.txt
+curl http://localhost:3000/api/albums/<album-id> -b cookies.txt
 ```
 
 ## Project structure
