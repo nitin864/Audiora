@@ -236,7 +236,7 @@ Create a `.env` file in the project root:
 
 ```env
 PORT=3000
-MONGO_URI=mongodb://localhost:27017/audiora
+MONGO_URI= copy your own connection string from MONGO_DB
 JWT_SECRET=replace-with-a-long-random-string
 IMAGE_KIT_PRIVATE_KEY=your-imagekit-private-key
 ```
