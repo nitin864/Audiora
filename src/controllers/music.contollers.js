@@ -8,7 +8,7 @@ const albumModel = require('../models/album.model')
 
 async function createMusic(req, res) {
     try {
-        const { title, genre } = req.body;
+        const { title, genre, singer } = req.body;
         const musicFile = req.files?.music?.[0];
         const thumbnailFile = req.files?.thumbnail?.[0];
 
@@ -35,6 +35,7 @@ async function createMusic(req, res) {
             title,
             artist: req.user.id,
             genre,
+            singer,
             thumbnail: thumbnailUrl,
             releaseDate: Date.now()
         })
@@ -58,7 +59,7 @@ async function createAlbum(req, res) {
         if (!musics) {
             musics = [];
         } else if (!Array.isArray(musics)) {
-            musics = [musics];  
+            musics = [musics];
         }
 
         const thumbnailFile = req.file;
@@ -91,11 +92,8 @@ async function createAlbum(req, res) {
 
 async function getAllMusics(req, res) {
     try {
-
-
-
         const music = await musicModel.find()
-            .populate("artist", "username")
+            .populate("artist", "username email")
             .sort({ createdAt: -1 });
 
         res.status(200).json({
@@ -133,17 +131,15 @@ async function getAllAlbums(req, res) {
     }
 }
 
-async function getMusicbyId(req,res){
-          
-     try {
+async function getMusicbyId(req, res) {
+    try {
+        const { id } = req.params;
 
-        const {id} = req.params;
-       
         const music = await musicModel
-         .findById(id)
-         .populate("artist", "username email")
+            .findById(id)
+            .populate("artist", "username email")
 
-        if(!music){
+        if (!music) {
             return res.status(404).json({
                 message: "music not found"
             })
@@ -154,27 +150,24 @@ async function getMusicbyId(req,res){
             music: music
         })
 
-        
-     } catch (error) {
+    } catch (error) {
         console.log(error)
 
         return res.status(500).json({
             message: "internal server error"
         })
-     }
+    }
 }
 
-async function getAlbumbyId(req,res){
-          
-     try {
+async function getAlbumbyId(req, res) {
+    try {
+        const { id } = req.params;
 
-        const {id} = req.params;
-       
         const album = await albumModel
-         .findById(id)
-         .populate("artist", "username email")
+            .findById(id)
+            .populate("artist", "username email")
 
-        if(!album){
+        if (!album) {
             return res.status(404).json({
                 message: "album not found"
             })
@@ -185,37 +178,27 @@ async function getAlbumbyId(req,res){
             album: album
         })
 
-        
-     } catch (error) {
+    } catch (error) {
         console.log(error)
 
         return res.status(500).json({
             message: "internal server error"
         })
-     }
-} 
+    }
+}
 
-async function getSongByArtist(req,res){
-
+async function getSongByArtist(req, res) {
     try {
-        
-       const {id} = req.params;
+        const { id } = req.params;
 
-       const music = await musicModel
-          .find({artist: id})
-          .populate("artist",  "username email")
-
-       if(!music){
-        return res.status(404).json({
-            message: `no music found from artist id : ${id}`
-        })
-       }
+        const music = await musicModel
+            .find({ artist: id })
+            .populate("artist", "username email")
 
         res.status(200).json({
             message: `${music.length} music found from that artist id!`,
             music: music
         })
-
 
     } catch (error) {
         console.log(error)
@@ -226,4 +209,4 @@ async function getSongByArtist(req,res){
     }
 }
 
-module.exports = { createMusic, createAlbum, getAllMusics, getAllAlbums, getMusicbyId, getAlbumbyId, getSongByArtist}
+module.exports = { createMusic, createAlbum, getAllMusics, getAllAlbums, getMusicbyId, getAlbumbyId, getSongByArtist }
