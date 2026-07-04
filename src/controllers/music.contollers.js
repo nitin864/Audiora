@@ -133,5 +133,36 @@ async function getAllAlbums(req, res) {
     }
 }
 
+async function getMusicbyId(req,res){
+          
+     try {
 
-module.exports = { createMusic, createAlbum, getAllMusics, getAllAlbums }
+        const {id} = req.params;
+       
+        const music = await musicModel
+         .findById(id)
+         .populate("artist", "username email")
+
+        if(!music){
+            return res.status(404).json({
+                message: "music not found"
+            })
+        }
+
+        res.status(200).json({
+            message: "music fetched!",
+            music: music
+        })
+
+        
+     } catch (error) {
+        console.log(error)
+
+        return res.status(500).json({
+            message: "internal server error"
+        })
+     }
+}
+
+
+module.exports = { createMusic, createAlbum, getAllMusics, getAllAlbums, getMusicbyId }
